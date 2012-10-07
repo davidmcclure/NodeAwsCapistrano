@@ -5,32 +5,31 @@ require 'capistrano/ext/multistage'
 
 # Repository information.
 set :application, "test"
-set :repository,  "git@github.com:davidmcclure/ExquisiteHaiku.git"
+set :node_process, "#{deploy_to}/current/app.js"
+set :repository,  "git://github.com/davidmcclure/NodeAwsCapistrano.git"
 set :scm, :git
 set :branch, 'master'
 
 # Host information.
 default_run_options[:pty] = true
-set :host, "ec2-user@ec2-50-16-21-11.compute-1.amazonaws.com"
+set :host, "ubuntu@ec2-54-242-92-123.compute-1.amazonaws.com"
 set :deploy_via, :remote_cache
 set :user, "root"
 set :use_sudo, true
 role :app, host
 
-set :bluepill, "path/to/bluepill"
-
 namespace :deploy do
 
   task :start, :roles => :app, :except => { :no_release => true } do
-    run "#{try_sudo :as => 'root'} #{bluepill} start #{application}"
+    run "#{try_sudo :as => 'root'} NODE_ENV=#{node_env} forever start #{node_process}"
   end
 
   task :stop, :roles => :app, :except => { :no_release => true } do
-    run "#{try_sudo :as => 'root'} #{bluepill} stop #{application}"
+    run "#{try_sudo :as => 'root'} forever stop #{node_process}"
   end
 
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "#{try_sudo :as => 'root'} #{bluepill} restart #{application}"
+    run "#{try_sudo :as => 'root'} forever restart #{node_process}"
   end
 
   task :build, :roles => :app, :except => { :no_release => true } do
@@ -51,5 +50,5 @@ end
 
 # Hooks.
 before 'deploy:setup', 'deploy:create_directory'
-# before 'deploy:finalize_update', 'deploy:build'
+before 'deploy:finalize_update', 'deploy:build'
 after 'deploy:setup', 'deploy:set_permissions'

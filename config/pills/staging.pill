@@ -2,10 +2,9 @@ Bluepill.application("exquisitehaiku") do |app|
 
   app.process("node") do |process|
 
-    process.working_dir = "/var/www/apps/exquisitehaiku/current"
+    process.working_dir = "/Users/davidmcclure/Projects/nodedeploy"
     process.start_command = "NODE_ENV=staging node app.js"
-    process.pid_file = "/var/www/apps/exquisitehaiku/shared/pids/node.pid"
-    process.stdout = process.stderr = "/var/www/apps/exquisitehaiku/shared/log/node.log"
+    process.pid_file = "/tmp/test.pid"
     process.daemonize = true
 
     process.start_grace_time = 10.seconds
