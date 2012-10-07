@@ -39,7 +39,6 @@ desc 'Build the application'
 task :build do
   js = 'public/javascripts'
   sh %{npm install}
-  sh %{bundle install}
 end
 
 desc 'Clean pacakges'
